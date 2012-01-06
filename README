@@ -1,1 +1,13 @@
-Readme
+1. Install puppetlabs' firewall module: http://forge.puppetlabs.com/puppetlabs/firewall
+
+2. We need to import persist.pp in site.pp:
+
+# /etc/manifest/site.pp
+import '../modules/iptables/manifests/persist.pp'
+
+
+For firewall holes:
+
+iptables::hole { 'ssh':
+	port => 22,
+}
