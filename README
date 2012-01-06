@@ -2,7 +2,7 @@
 
 2. We need to import persist.pp in site.pp:
 
-# /etc/manifest/site.pp
+# /etc/puppet/manifests/site.pp
 import '../modules/iptables/manifests/persist.pp'
 
 
