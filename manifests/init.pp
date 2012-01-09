@@ -1,4 +1,4 @@
-if $fail2ban_installed {
+if $fail2ban_installed == 'true' {
 	$pre_iptables_save = 'service fail2ban stop &&'
 	$post_iptables_save = '&& service fail2ban start'
 }
