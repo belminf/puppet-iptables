@@ -30,22 +30,18 @@ class iptables {
 		
 	firewall { '000 input: accept local':
 		chain => 'INPUT',
+		proto => 'all',
 		iniface => 'lo',
 		action => 'accept',
 	}
 
 	firewall { '000 input: accept related and established':
 		chain => 'INPUT',
+		proto => 'all',
 		state => ['ESTABLISHED', 'RELATED'],
 		action => 'accept',
 	}
 
-	firewall { '000 input: accept dns':
-		chain => 'INPUT',
-		proto => 'udp',
-		sport => 53,
-		action => 'accept',
-	}
 }
 
 define iptables::hole ($proto='tcp', $port, $source=undef) {
