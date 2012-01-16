@@ -1,24 +1,6 @@
-if $fail2ban_installed {
-	$pre_iptables_save = 'service fail2ban stop &&'
-	$post_iptables_save = '&& service fail2ban start'
-}
 
-$iptables_save = "${pre_iptables_save}iptables -P INPUT DROP && iptables -P OUTPUT ACCEPT && service iptables save${post_iptables_save}"
-
-
-exec { 'iptables-persist':
-	path => '/sbin/',
-	command => $iptables_save,
-	refreshonly => true,
-}
-
-Firewall {
-	notify => Exec['iptables-persist'],
-}
-
-
-stage { pre: before => Stage[main] }
-class { 'iptables': stage => 'pre' }
+#stage { pre: before => Stage[main] }
+#class { 'iptables': stage => 'pre' }
 
 class iptables {
 	
@@ -42,6 +24,19 @@ class iptables {
 		action => 'accept',
 	}
 
+	if $fail2ban_installed == 'true' {
+		$pre_iptables_save = 'service fail2ban stop &&'
+		$post_iptables_save = '&& service fail2ban start'
+	}
+
+	$iptables_save = "${pre_iptables_save}iptables -P INPUT DROP && iptables -P OUTPUT ACCEPT && service iptables save${post_iptables_save}"
+
+
+	exec { 'iptables-persist':
+		path => '/sbin/',
+		command => $iptables_save,
+		refreshonly => true,
+	}
 }
 
 define iptables::hole ($proto='tcp', $port, $source=undef) {
@@ -51,5 +46,6 @@ define iptables::hole ($proto='tcp', $port, $source=undef) {
 		dport => $port,
 		source => $source,
 		action => 'accept',
+		notify => Exec['iptables-persist'],
         }
 }
